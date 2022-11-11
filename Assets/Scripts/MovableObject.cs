@@ -8,11 +8,9 @@ public class MovableObject : MonoBehaviour
 {
     public BoxCollider2D boxCollider2D;
     public Rigidbody2D rigidBody2D;
-    public float moveSpeed = 2.5f;
+    public float moveSpeed = 1f;
 
-    private bool moving = false;
     private Vector3 target;
-    private Vector3 prevPos;
 
 
     // Start is called before the first frame update
@@ -24,15 +22,7 @@ public class MovableObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (moving)
-        {
-            Vector3 newPos = Vector3.MoveTowards(this.transform.localPosition, target, 0.05f);
-            rigidBody2D.MovePosition(newPos);
-            if (newPos == target)
-            {
-                moving = false;
-            }
-        }
+
     }
 
 
@@ -40,16 +30,13 @@ public class MovableObject : MonoBehaviour
 
     private void Move(Vector3 dirVector)
     {
-        if (!moving)
-        {
             float width = boxCollider2D.size.x;
             float height = boxCollider2D.size.y;
             dirVector.x *= width;
             dirVector.y *= height;
-            prevPos = this.transform.localPosition;
             target = this.transform.localPosition + dirVector;
-            moving = true;
-        }
+            Vector3 newPos = Vector3.MoveTowards(this.transform.localPosition, target, 0.05f);
+            rigidBody2D.MovePosition(newPos);
     }
 
     public void MoveUp()
@@ -72,12 +59,6 @@ public class MovableObject : MonoBehaviour
         Move(new Vector3(moveSpeed, 0, 0));
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        Debug.Log("boom!");
-        moving = true;
-        target = prevPos;
-    }
 
     #endregion
 }
